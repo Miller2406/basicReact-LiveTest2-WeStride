@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  const incCount = () => {
+    setCount(count + 1);
+  };
+
+  const reset = () => {
+    stop();
+    setCount(0);
+  };
+
+  const start = () => {
+    if (!isRunning) {
+      incCount();
+    }
+    setIsRunning(true);
+  };
+
+  const stop = () => {
+    clearInterval(myInterval);
+    setIsRunning(false);
+  };
+
+  let myInterval;
+  useEffect(() => {
+    if (isRunning) {
+      myInterval = setInterval(() => {
+        incCount();
+        clearInterval(myInterval);
+      }, 1000);
+    }
+  }, [count]);
 
   return (
-    <>
+    <div className="App">
+      <h1>Test Basic React 2</h1>
+      <div className="count">{count < 10 ? "0" + count : count}</div>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <button onClick={start}>start</button>
+        <button onClick={stop}>stop</button>
+        <button onClick={reset}>reset</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
-
-export default App
