@@ -4,6 +4,7 @@ import "./App.css";
 export default function App() {
   const [count, setCount] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [myInterval, setMyInterval] = useState(0);
 
   const incCount = () => {
     setCount(count + 1);
@@ -26,13 +27,15 @@ export default function App() {
     setIsRunning(false);
   };
 
-  let myInterval;
   useEffect(() => {
     if (isRunning) {
-      myInterval = setInterval(() => {
+      let runmyInterval = setInterval(() => {
         incCount();
-        clearInterval(myInterval);
       }, 1000);
+      setMyInterval(runmyInterval);
+      return () => {
+        clearInterval(myInterval);
+      };
     }
   }, [count]);
 
